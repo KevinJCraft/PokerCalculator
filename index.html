@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Poker</title>
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css?family=B612+Mono&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div id="menu"></div>
+        <div class="hand-selection">
+
+            <div class="hero">
+                <label for="hero">Hero</label>
+                <button id="hero" class="hand focus" value=0></button>
+                <div class="results" value=0></div>
+            </div> 
+
+            <div class="villian1"> 
+                <label for="villian1">Villian 1</label>
+                <button id="villian1" class="hand" value=1></button>
+                <div class="results" value=1></div>
+            </div> 
+
+            <div class="villian2"> 
+                <label for="villian2">Villian 2</label>
+                <button id="villian2" class="hand" value=2></button>
+                <div class="results" value=2></div>
+            </div> 
+
+            <div class="villian3"> 
+                <label for="villian3">Villian 3</label>
+                <button id="villian3" class="hand" value=3></button>
+                <div class="results" value = 3></div>
+            </div> 
+
+            <div class="villian4"> 
+                <label for="villian4">Villian 4</label>
+                <button id="villian4" class="hand" value=4></button>
+                <div class="results" value = 4></div>
+            </div> 
+
+            <div class="villian5"> 
+                <label for="villian5">Villian 5</label>
+                <button id="villian5" class="hand" value=5></button>
+                <div class="results" value = 5></div>
+            </div> 
+
+            <div class="board"> 
+                <label for="board">Board</label>
+                <button id="board" class="hand" value=6></button>
+            </div>  
+
+            <div class="buttons">
+                    <button id="run" onclick="run()">Run</button>
+                    <button id="monteCarlo" onclick="runMonteCarlo()">Monte Carlo</button>
+                    <button id="clear" onclick="clearAll()">Reset</button>   
+                    <button onclick="clearResults()">Clear Results</button>         
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+
+<script src="js/deck.js"></script>
+<script src="js/hands.js"></script>
+<script src="js/app.js"></script>
+
+</html>

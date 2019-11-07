@@ -1,0 +1,191 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+}
+
+body {
+    background-color: lightslategray;
+    font-family: 'B612 Mono', monospace;
+}
+
+
+/*---------------------------------------------------------
+Utility Classes
+---------------------------------------------------------*/
+
+
+.show {
+    max-height: 100%;
+    transition:  ease-in .5s;
+    overflow: hidden;
+}
+
+.hide {
+    max-height: 0px;
+    transition: 1s;
+    overflow: hidden;
+}
+
+.used {
+    background: yellow;
+}
+
+.inFocusedHand {
+    border: rgb(11, 235, 11) solid 5px;
+}
+
+.focus {
+    border: rgb(11, 235, 11) solid 5px;
+}
+
+
+
+/*----------------------------------------------------------
+Main Styles
+-----------------------------------------------------------*/
+
+
+label {
+    font-size: 20px;
+    font-weight: bolder;
+    color: white;
+}
+.container {
+    width: 90%;
+    max-width: 1500px;
+    margin: auto;
+    display: flex;
+
+}
+
+#menu { 
+    height: 600px;
+    width: 200px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(13,1fr);
+    background: lightgreen;
+    z-index: 100;
+}
+
+
+.hand {
+    height: 50px;
+    width: 75px;
+    display: flex;
+    align-content: space-around;
+
+}
+
+.results {
+    width: 75px;
+    height: 50px;
+    padding: 5px;
+    color: white;
+    font-size: 10px;
+}
+
+#board {
+    width: 200px;
+}
+
+.board {
+    position: absolute;
+    top: 275px;
+    left: 405px;
+
+}
+
+.hero {
+    position: absolute;
+    top: 100px;
+    left: 335px;
+}
+
+.villian1 {
+    position: absolute;
+    top: 100px;
+    right: 335px;
+}
+
+.villian2 {
+
+    position: absolute;
+    top: 275px;
+    right: 100px;
+}
+
+.villian3 {
+    position: absolute;
+    bottom: 13px;
+    right: 335px;
+}
+
+.villian4 {
+    position: absolute;
+    bottom: 13px;
+    left: 335px;
+}
+
+.villian5 {
+    position: absolute;
+    top: 275px;
+    left: 100px;
+}
+
+
+
+
+
+.hand span {
+    text-align: center;
+    align-items: baseline;
+    flex: 1;
+    
+    
+}
+
+
+
+
+#menu div {
+    height: 100%;
+    width:100%;
+    
+}
+
+#menu button span {
+    z-index: -100;
+}
+
+#menu div:hover {
+    color: lightgray;
+    background-size: cover;
+
+}
+
+.hand-selection {
+    background-image: url("../img/poker-table.jpg");
+    position: relative;
+    height: 600px;
+    width: 1043px;
+}
+
+.buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 65px;
+}
+.buttons button {
+    display: block;
+    margin: 10px;
+    width: 175px;
+    height: 38px;
+    border-radius: 3px;
+    color: white;
+    background-Color: black;
+
+}
+
+
