@@ -294,7 +294,7 @@ EVENT LISTENERS
 //it sets the display focus to the target of the click
 //it removes all 'inFocusedHand' classes and adds that class to any card that is already in the targets hand
 
-allHandDisplays.forEach( obj => obj.addEventListener ("click",  e => {
+allHandDisplays.forEach( obj => obj.addEventListener ("mousedown",  e => {
 
     if(e.currentTarget.classList.contains("hand") ) {
 
@@ -322,7 +322,7 @@ allHandDisplays.forEach( obj => obj.addEventListener ("click",  e => {
 // adds that coorisponding card to the hand or board that currently has focus
 // adds the classes 'used' and 'inFocusedHand' to the card in the display and displays the cards name in focused hand
 // if the card is already in the focused hand then that card is removed from the hand
-menu.addEventListener("click", (e) => {
+menu.addEventListener("mousedown", (e) => {
     if ( !e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 2 ) {
 
         allHands[handFocusIndex].cards.push(newDeck.copyCard(e.target.value));
