@@ -72,10 +72,8 @@ label {
 
 .hand {
     height: 50px;
-    width: 75px;
+    width: 88px;
     display: flex;
-    align-content: space-around;
-
 }
 
 .results {
@@ -141,8 +139,8 @@ label {
 .hand span {
     text-align: center;
     align-items: baseline;
-    flex: 1;
-    
+    padding: 0px 8px;
+    width: 38px;
     
 }
 
@@ -176,6 +174,7 @@ label {
     position: absolute;
     bottom: 20px;
     right: 65px;
+    width: 175px;
 }
 .buttons button {
     display: block;
@@ -185,7 +184,6 @@ label {
     border-radius: 3px;
     color: white;
     background-Color: black;
-
 }
 
 

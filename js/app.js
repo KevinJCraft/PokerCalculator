@@ -323,6 +323,11 @@ allHandDisplays.forEach( obj => obj.addEventListener ("mousedown",  e => {
 // adds the classes 'used' and 'inFocusedHand' to the card in the display and displays the cards name in focused hand
 // if the card is already in the focused hand then that card is removed from the hand
 menu.addEventListener("mousedown", (e) => {
+
+    
+    clearResults();
+    
+
     if ( !e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 2 ) {
 
         allHands[handFocusIndex].cards.push(newDeck.copyCard(e.target.value));
