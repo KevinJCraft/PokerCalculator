@@ -263,6 +263,10 @@ const clearResults = () => {
         e.wins = 0;
         e.ties = 0;
         e.handsPlayed = 0;
+        e.pairs = [];
+        e.trips = [];
+        e.quads = [];
+        
     });
 
     allResultsDisplay.forEach( e => e.innerHTML = "");    
@@ -351,6 +355,4 @@ menu.addEventListener("mousedown", (e) => {
         usedCards = usedCards.filter( obj => obj != e.target.value);
     }
 });
-
-
 

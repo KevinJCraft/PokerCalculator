@@ -7,8 +7,10 @@ class Hand {
         this.handsPlayed = 0;
         this.ties = 0;
         this.displayEl;
+        this.pairs = [];
+        this.trips = [];
+        this.quads = [];
     }
-
 
     getCards(deck, amount=1 ) {
         this.cards = this.cards.concat(deck.dealCard(amount));
@@ -16,25 +18,24 @@ class Hand {
 
     copyHand(){
         return this.cards;
-    }
-
-
-    
+    }    
 
     show() {
         let str = "";
         this.cards.forEach((e) => { str += "<span style='color: " + e.color +"'>" + e.name + "</span>  " });
         return str;
-    };
-
-    
+    }    
 
     muck() {
         this.cards = [];
-    };
+    }
 
     swapCards( i , j ) {
         this.cards[i] = this.cards.splice( j , 1 , this.cards[i] )[0];
+    }
+
+    moveCardToIndex( card, index = 0 ) {
+        this.cards.splice(index, 0, this.cards.splice( this.cards.indexOf( card ), 1)[0]);
     }
 
     sort() {
@@ -45,85 +46,120 @@ class Hand {
         el.innerHTML = this.show();
     }
 
-    evaluate() {
+    resetGroupings() {
+        this.pairs = [];
+        this.trips = [];
+        this.quads = [];
+    }
 
-        // this.value = evaluateHand(this.cards);
-
+    groupingsByRank() {        
         
+        let index = 0;
+        for ( let i = 14; i >= 2; i--) {
+            let cards = this.cards.filter( card => card.rank ===i);
+            if ( cards.length == 2 && this.pairs.length < 2) {
+                this.pairs[index] = cards;
+                index++;
+            } else if (cards.length == 3 && this.trips.length < 1) {
+                this.trips[0] = cards;
+            } else if (cards.length == 4) {
+                this.quads[0] = cards;
+            }            
+        }
+    }
 
+    addDummyAce() {
+        if( this.cards[0].rank === 14 ) {
+            this.cards.push( { rank: 1, suit: this.cards[0].suit } )
+        }
+    }
+
+    removeDummyAce () {
+        this.cards.pop();
+    }
+
+    calcValue( handRankValue ) {
+        let multiplier = 100;
+        let cardCount = 1;
+        this.value = handRankValue;
+        
+        this.cards.forEach( ( e ) => {             
+            if (cardCount <= 5) {
+                this.value += e.rank * multiplier;
+                multiplier /= 100;
+                cardCount++;
+                }
+            });
+    }
+
+    sortBySuit(suit) {
+        this.cards.sort( (a,b) => {
+            if ( a.suit == suit && b.suit == suit ) {
+                return 0;
+            } else if ( a.suit == suit ) {
+                return -1;
+            } else {
+                return 1;
+            }
+         });
+    }
+
+    evaluate() {
+        this.resetGroupings();
         this.sort();
+        this.groupingsByRank();
         
         if (this.isStraightFlush()) {
-    
+            this.calcValue(80000);
+
         } else if (this.isQuads()) {
-    
+            this.calcValue(70000);
+
         } else if (this.isFullHouse()) {
-    
+            this.calcValue(60000);
+
         } else if (this.isFlush()) {
-    
+            this.calcValue(50000);
+
         } else if (this.isStraight()) {
-    
+
         } else if (this.isTrips()) {
-    
+            this.calcValue(30000);
+
         } else if (this.isTwoPair()) {
-    
+            this.calcValue(20000);
+
         } else if (this.isPair()) {
-    
+            this.calcValue(10000);
+
         } else {
-            this.value =  0 + (this.cards[0].rank * 100)  + (this.cards[1].rank) + (this.cards[2].rank * .01) + (this.cards[3].rank * .0001) + (this.cards[4].rank * .000001);
+            this.calcValue( 0 );
         }
     }
 
     isPair() {
-        for (let i = 0; i < this.cards.length; i++) {
-            for (let j = i + 1; j < this.cards.length; j++) {
-                if (this.cards[i].rank === this.cards[j].rank) {
-                    this.cards.unshift(this.cards.splice(i, 1)[0]);
-                    this.cards.unshift(this.cards.splice(j, 1)[0]);
-                    this.value = 10000 + (this.cards[0].rank * 100)  + (this.cards[2].rank) + (this.cards[3].rank * .01) + (this.cards[4].rank * .0001);
-                    return true;
-                }
-            }
+        if( this.pairs.length == 1 ) {
+            this.pairs[0].forEach( card => this.moveCardToIndex(card));
+            return true;
         }
     }
 
     isTwoPair() {
-        for (let i = 0; i < this.cards.length-1 ; i++) {
 
-            if (this.cards[i].rank === this.cards[i+1].rank) {
-
-                for (let j = i+2; j < this.cards.length-1; j++) {
-
-                    if (this.cards[j].rank === this.cards[j+1].rank) {
-
-                        this.cards.unshift(this.cards.splice(i  , 1)[0]);
-                        this.cards.unshift(this.cards.splice(i+1, 1)[0]);            
-                        this.cards.splice(2,0,this.cards.splice(j  , 1)[0]);            
-                        this.cards.splice(2,0,this.cards.splice(j+1, 1)[0]);
-
-                        this.value = 20000 + (this.cards[0].rank * 100)  + (this.cards[2].rank) + (this.cards[4].rank * .01);                        
-                        
-                        return true;
-                    }
-                }
-            }
+        if(this.pairs.length === 2) {
+            this.pairs[1].forEach ( card => this.moveCardToIndex(card));
+            this.pairs[0].forEach ( card => this.moveCardToIndex(card));
+            return true;
         }
-    }
-    
+    }    
+
     isTrips() {
-        for (let i = 0; i < this.cards.length-2; i++) {
 
-            if (this.cards[i].rank === this.cards[i+1].rank && this.cards[i].rank === this.cards[i+2].rank) {
-
-                this.cards.unshift(this.cards.splice(i, 1)[0]);
-                this.cards.unshift(this.cards.splice(i+1, 1)[0]);
-                this.cards.unshift(this.cards.splice(i+2, 1)[0]);
-
-                this.value = 30000 + (this.cards[0].rank * 100)  + (this.cards[3].rank) + (this.cards[4].rank * .01);
-                return true;
-            }
+        if(this.trips.length === 1) {
+            this.trips[0].forEach( card => this.moveCardToIndex(card));
+            return true
         }
-    }
+    }        
 
     isStraight() {
 
@@ -150,135 +186,81 @@ class Hand {
                 } else {
                     j = this.cards.length;
                     straightLength = 1;
-                }
-                
+                }                
             }
-
         }
     }
 
+    // isStraight() {
+    //     let tempHand = new Hand;
+    //     tempHand.cards = this.copyHand();
+    //     for( let i = 1; i<tempHand.cards.length; i++) {
+    //         if(tempHand.cards[i].rank === tempHand.cards[i-1].rank ) {
+    //             tempHand.cards.splice( i, 1);
+    //             i--;
+    //         }
+    //     }
+    //     tempHand.addDummyAce();
+        
+    //     while( tempHand.cards.length > 4 ) {
+    //         if( tempHand.cards[0].rank - tempHand.cards[4].rank === 4 ) {
+    //             tempHand.cards.forEach( card => this.moveCardToIndex(card));
+    //             return true;
+    //         } else {
+    //             tempHand.cards.shift();
+    //         }
+    //     }
+        
+    // }
 
     isFlush() {
 
-        let multiplier = 100;
         let allSuits = [ "spade", "heart", "diamond", "club" ];
+        let flush = false;
 
-        for( let i=0; i<allSuits.length; i++) {
-            if( this.cards.filter( e => e.suit === allSuits[i]).length > 4 ) {
-
-                this.value = 50000;
-                let cardCount = 1;
-                this.cards.forEach( ( e ) => { 
-                    if (e.suit === allSuits[i] && cardCount <= 5) {
-                        this.value += e.rank * multiplier;
-                        multiplier /= 100;
-                        cardCount++;
-                    }
-                });
-                return true;
+        allSuits.forEach( suit => {
+            if( this.cards.filter( card => card.suit === suit).length > 4 ) {
+                this.sortBySuit( suit );
+                flush = true;
             }
-        }
+        })
+
+        return flush;
+        
     }
 
     isFullHouse() {
-        for (let i = 0; i < this.cards.length-2; i++) {
-
-            if (this.cards[i].rank === this.cards[i+1].rank && this.cards[i].rank === this.cards[i+2].rank) {
-
-                this.cards.unshift(this.cards.splice(i, 1)[0]);
-                this.cards.unshift(this.cards.splice(i+1, 1)[0]);
-                this.cards.unshift(this.cards.splice(i+2, 1)[0]);
-
-                for( let j=3; j < this.cards.length -1; j++) {
-
-                    if( this.cards[j].rank === this.cards[j+1].rank) {
-
-                        this.value = 60000 + (this.cards[0].rank * 100)  + (this.cards[j].rank);
-                        return true;
-                    }
-                }
-            }            
+        
+        if( this.trips.length === 1 && this.pairs.length > 0 ) {
+            this.pairs[0].forEach( card => this.moveCardToIndex(card));
+            this.trips[0].forEach( card => this.moveCardToIndex(card));
+            return true;
         }
-        this.sort();
-    }
-    
+    }    
+
     isQuads() {
-        for (let i = 0; i < this.cards.length-3; i++) {
 
-            if (this.cards[i].rank === this.cards[i+1].rank && this.cards[i+2].rank === this.cards[i+3].rank  && this.cards[i].rank === this.cards[i+3].rank ) {
-                
-                if (i > 0) {
-                this.value = 70000 + (this.cards[i].rank * 100) + (this.cards[0].rank)
-                return true;
-                } else {
-                    this.value = 70000 + (this.cards[0].rank * 100) + (this.cards[4].rank)
-                    return true;
-                    }
-            }
+        if(this.quads.length === 1) {
+            this.quads[0].forEach( card => this.moveCardToIndex(card));
+            return true;
         }
+        
     }
-
 
     isStraightFlush() {
-        let consecutiveRank = []; //used to index the rank of possible straight flush cards
-        let consecutiveIndex = []; //used to index the position, in the hand, of possible straight flush cards
-        let suit; //holds the suit that is currently being evaluated
-    
-        //indexs a card to begin checking for straight flush
-        for (let i = 0; i < this.cards.length-3; i++) {
-            consecutiveRank.push(this.cards[i].rank);
-            consecutiveIndex.push(i);
-            suit = this.cards[i].suit;
-            //compares each following card to see if it is the next ranking card and of same suit and indexs that cards rank a poistion
-            for (let j = i + 1; j < this.cards.length; j++) {
-                if (consecutiveRank[consecutiveRank.length - 1] - this.cards[j].rank === 1 && suit === this.cards[j].suit) {
-                    consecutiveRank.push(this.cards[j].rank);
-                    consecutiveIndex.push(j);
+        if ( this.isFlush() ) {
+            let flushSuit = this.cards[1].suit;
+            let tempHand = new Hand;
+            tempHand.cards = this.cards.filter( e => e.suit === flushSuit );
+
+            while( tempHand.cards.length > 4 ) {
+                if( tempHand.cards[0].rank - tempHand.cards[4].rank === 4 ) {
+                    tempHand.cards.forEach( card => this.moveCardToIndex(card));
+                    return true;
+                } else {
+                    tempHand.cards.shift();
                 }
             }
-    
-            //if 5 or more cards were indexed then a straight flush is confirmed
-            if (consecutiveRank.length >= 5) {
-                //starting at the end of the hand, each card that is not indexed will be moved to the end of the hand and out of the way
-                //the remaining cards will the straight flush, in order, at the front of the hand
-                for (let a = this.cards.length - 1; a >= 0; a--) {
-                    if (!consecutiveIndex.includes(a)) {
-                        this.cards.push(this.cards.splice(a, 1)[0]);
-                    }
-                }
-                this.value = 80000 + (this.cards[0].rank * 100);
-                return true;
-                //Ace only has a rank of 14 so this is to check if an Ace can be used as a low in an A - 5 straight
-                //this evalates if there is a 4 card straight (2-3-4-5) and checks to see if there is an Ace to complete the straight
-            } else if (consecutiveRank.length === 4 && this.cards[consecutiveIndex[3]].rank === 2) {
-    
-                //since there are 3 remaing cards each one needs to be checked to see if they are the Ace of the proper suit to complete the straight flush
-                for (let b = 0; b < 3; b++) {
-                    if (this.cards[b].rank === 14 && this.cards[b].suit === suit) {
-                        //if found we remove the nonindexed (nonstraightflush) cards from the hand starting at the end of the hand
-                        for (let a = this.cards.length - 1; a >= 0; a--) {
-                            if (!consecutiveIndex.includes(a)) {
-                                this.cards.push(this.cards.splice(a, 1)[0]);
-                            }
-    
-                        }
-                        //the ace was never indexed so this moves the the ace into position
-                        this.cards.splice(4, 0, this.cards.splice(this.cards.length - 1 - b, 1)[0]);
-                        this.value = 80000 + (this.cards[0].rank * 100);
-                        return true;
-                    } else {
-    
-                        consecutiveRank = [];
-                        consecutiveIndex = [];
-                        suit = "";
-                    }
-                }
-            } else {
-                //if no straight flush was found this clears the indexs to be used again begining with the next card in the hand
-                consecutiveRank = [];
-                consecutiveIndex = [];
-                suit = "";
-            }
-        }   
+        }
     }
 }
