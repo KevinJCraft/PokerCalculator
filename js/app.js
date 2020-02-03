@@ -9,7 +9,7 @@ const allHandDisplays = document.querySelectorAll(".hand");
 
 
 let newDeck = new Deck;
-let deckStub = new Deck; 
+let deckStub = new Deck;
 let deck = new Deck;
 
 const board = new Hand;
@@ -41,27 +41,27 @@ FUNCTIONS
 //finally it removes the value and adds 1 to the hands played for all hands
 const compare = () => {
 
-    for(let i=0; i<allHands.length -1 ; i++ ) {
+    for (let i = 0; i < allHands.length - 1; i++) {
 
-        if (allHands[i].cards.length > 0 ) {
+        if (allHands[i].cards.length > 0) {
 
             Array.prototype.push.apply(allHands[i].cards, board.cards);
             allHands[i].evaluate();
-            allHands[i].cards = allHands[i].cards.filter( e => !board.cards.includes(e) );
+            allHands[i].cards = allHands[i].cards.filter(e => !board.cards.includes(e));
         }
     }
 
-    let winningValue = Math.max.apply(Math, allHands.map( obj => obj.value ));
-    let numOfWinningHands = allHands.filter( e => e.value === winningValue);
+    let winningValue = Math.max.apply(Math, allHands.map(obj => obj.value));
+    let numOfWinningHands = allHands.filter(e => e.value === winningValue);
 
     if (numOfWinningHands.length > 1) {
-        numOfWinningHands.forEach( e => e.ties++);
+        numOfWinningHands.forEach(e => e.ties++);
     } else {
-        numOfWinningHands.forEach( e => e.wins++);
+        numOfWinningHands.forEach(e => e.wins++);
     }
-    
-    allHands.forEach( (e) => {
-        e.value = 0; 
+
+    allHands.forEach((e) => {
+        e.value = 0;
         e.handsPlayed++;
     });
 
@@ -74,63 +74,62 @@ const run = () => {
     clearResults();
     runButton.innerText = "...running";
     deckStub = new Deck;
-    deckStub.cards = deckStub.cards.filter( e=> ! usedCards.includes(parseInt(e.identifier)));
+    deckStub.cards = deckStub.cards.filter(e => !usedCards.includes(parseInt(e.identifier)));
 
-    setTimeout( () => { 
+    setTimeout(() => {
 
-        if ( board.cards.length < 5 ) {
+        if (board.cards.length < 5) {
 
-            for(let i=0; i<deckStub.cards.length; i++) {
+            for (let i = 0; i < deckStub.cards.length; i++) {
 
-                console.log(deckStub.cards[i]);
 
                 board.cards.push(deckStub.copyCard(i));
 
-                if(board.cards.length === 5) {
+                if (board.cards.length === 5) {
 
                     compare();
                     board.cards.pop();
 
                 } else {
 
-                    for(let j=i+1; j<deckStub.cards.length; j++) {
+                    for (let j = i + 1; j < deckStub.cards.length; j++) {
 
                         board.cards.push(deckStub.copyCard(j));
 
-                        if(board.cards.length === 5) {
+                        if (board.cards.length === 5) {
 
                             compare();
                             board.cards.pop();
 
                         } else {
 
-                            for(let a=j+1; a<deckStub.cards.length; a++) {
+                            for (let a = j + 1; a < deckStub.cards.length; a++) {
 
                                 board.cards.push(deckStub.copyCard(a));
 
-                                if(board.cards.length === 5) {
+                                if (board.cards.length === 5) {
 
                                     compare();
                                     board.cards.pop();
 
                                 } else {
 
-                                    for(let b=a+1; b<deckStub.cards.length; b++) {
+                                    for (let b = a + 1; b < deckStub.cards.length; b++) {
 
                                         board.cards.push(deckStub.copyCard(b));
 
-                                        if(board.cards.length === 5) {
+                                        if (board.cards.length === 5) {
 
                                             compare();
                                             board.cards.pop();
 
                                         } else {
 
-                                            for(let c=b+1; c<deckStub.cards.length; c++) {
+                                            for (let c = b + 1; c < deckStub.cards.length; c++) {
 
                                                 board.cards.push(deckStub.copyCard(c));
 
-                                                if(board.cards.length === 5) {
+                                                if (board.cards.length === 5) {
 
                                                     compare();
                                                     board.cards.pop();
@@ -160,10 +159,10 @@ const run = () => {
 
 // loops through every hand and displays its win and tie percentage
 const displayResults = () => {
-    for ( let i = 0; i < allHands.length - 1; i++) {
-        if ( allHands[i].cards.length > 0 ) {
-            allResultsDisplay[i].innerHTML = "win: " + ((allHands[i].wins / allHands[i].handsPlayed)*100).toFixed(2) + "<br>" +
-                                             "tie: " + ((allHands[i].ties / allHands[i].handsPlayed)*100).toFixed(2);
+    for (let i = 0; i < allHands.length - 1; i++) {
+        if (allHands[i].cards.length > 0) {
+            allResultsDisplay[i].innerHTML = "win: " + ((allHands[i].wins / allHands[i].handsPlayed) * 100).toFixed(2) + "<br>" +
+                "tie: " + ((allHands[i].ties / allHands[i].handsPlayed) * 100).toFixed(2);
         }
     }
 }
@@ -173,34 +172,34 @@ const displayResults = () => {
 // it repeats this 300 times everytime its called
 const monteCarlo = () => {
 
-    for(let i = 0; i<300 ; i++) {
+    for (let i = 0; i < 300; i++) {
 
-        let cardsNeeded = 5 -  board.cards.length;
+        let cardsNeeded = 5 - board.cards.length;
 
-        for (let i = 0; i<cardsNeeded; i++) {
+        for (let i = 0; i < cardsNeeded; i++) {
 
             let randomIndex;
 
             do {
 
-            randomIndex = Math.floor(Math.random()*52);
+                randomIndex = Math.floor(Math.random() * 52);
 
             } while (usedCards.includes(randomIndex))
 
             board.cards.push(newDeck.copyCard(randomIndex));
-            usedCards.push(parseInt(randomIndex)); 
+            usedCards.push(parseInt(randomIndex));
         }
         compare();
         displayResults();
 
-        for ( let i = 0; i < cardsNeeded; i++) {
+        for (let i = 0; i < cardsNeeded; i++) {
 
             usedCards.pop();
             board.cards.pop();
         }
 
         timesrun++;
-}
+    }
 
 };
 
@@ -209,15 +208,15 @@ const monteCarlo = () => {
 // percentages without having to wait 20 seconds for the results
 const runMonteCarlo = () => {
 
-    
-    if(!monteRunning) {
+
+    if (!monteRunning) {
 
         clearResults();
         monteButton.innerText = "STOP";
 
-        setTimeout( () => { 
+        setTimeout(() => {
 
-        monteRunning = setInterval(monteCarlo, 1);
+            monteRunning = setInterval(monteCarlo, 1);
 
         }, 0);
 
@@ -244,13 +243,13 @@ const clearAll = () => {
 
     clearResults();
 
-    allHands.forEach( (e) => {
+    allHands.forEach((e) => {
         e.cards = [];
     });
 
-    allHandDisplays.forEach( e => e.innerHTML =  "");
+    allHandDisplays.forEach(e => e.innerHTML = "");
 
-    document.querySelectorAll("#menu button").forEach( e => e.classList = "");
+    document.querySelectorAll("#menu button").forEach(e => e.classList = "");
 
     usedCards = [];
 };
@@ -259,17 +258,17 @@ const clearAll = () => {
 // clears the results form every hand but leaves the cards in place
 const clearResults = () => {
 
-    allHands.forEach( (e) => {
+    allHands.forEach((e) => {
         e.wins = 0;
         e.ties = 0;
         e.handsPlayed = 0;
         e.pairs = [];
         e.trips = [];
         e.quads = [];
-        
+
     });
 
-    allResultsDisplay.forEach( e => e.innerHTML = "");    
+    allResultsDisplay.forEach(e => e.innerHTML = "");
 }
 
 
@@ -279,8 +278,8 @@ PROCESSES
 
 // creates the display of cards by creating a new element and placing the cards name inside the element
 // it also gives each element a value that corresponds to each cards identifier to help link each element to its exact card in a deck
-for( let i=0; i<deck.cards.length; i++ ) {
-    
+for (let i = 0; i < deck.cards.length; i++) {
+
     let div = document.createElement("button");
     div.innerHTML = deck.cards[i].name;
     div.value = i;
@@ -298,20 +297,20 @@ EVENT LISTENERS
 //it sets the display focus to the target of the click
 //it removes all 'inFocusedHand' classes and adds that class to any card that is already in the targets hand
 
-allHandDisplays.forEach( obj => obj.addEventListener ("mousedown",  e => {
+allHandDisplays.forEach(obj => obj.addEventListener("mousedown", e => {
 
-    if(e.currentTarget.classList.contains("hand") ) {
+    if (e.currentTarget.classList.contains("hand")) {
 
-        allHandDisplays.forEach( (object) => object.classList.remove("focus") ); //removes the focus class for each hand
+        allHandDisplays.forEach((object) => object.classList.remove("focus")); //removes the focus class for each hand
         e.currentTarget.classList += " focus"; //adds focus class to selected hand
         handFocusIndex = parseInt(e.currentTarget.value); //makes the handfocusIndex equal to hand associated with the display
         displayFocus = e.currentTarget; //sets the displayFocus on the hand selected
-        document.querySelectorAll(".used").forEach( el => el.classList.remove("inFocusedHand"));
-        document.querySelectorAll("#menu button").forEach ( (el) => { 
+        document.querySelectorAll(".used").forEach(el => el.classList.remove("inFocusedHand"));
+        document.querySelectorAll("#menu button").forEach((el) => {
 
-            allHands[handFocusIndex].cards.forEach( (obj) => {
+            allHands[handFocusIndex].cards.forEach((obj) => {
 
-                if( obj.identifier === parseInt(el.value)) {
+                if (obj.identifier === parseInt(el.value)) {
 
                     el.classList += " inFocusedHand";
                 }
@@ -328,31 +327,31 @@ allHandDisplays.forEach( obj => obj.addEventListener ("mousedown",  e => {
 // if the card is already in the focused hand then that card is removed from the hand
 menu.addEventListener("mousedown", (e) => {
 
-    
+
     clearResults();
-    
 
-    if ( !e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 2 ) {
 
-        allHands[handFocusIndex].cards.push(newDeck.copyCard(e.target.value));
-        usedCards.push(parseInt(e.target.value)); 
-        e.target.classList += " used inFocusedHand";
-        allHands[handFocusIndex].print(displayFocus);
-        
-    }  else if(!e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 5 && displayFocus.value == 6) {
+    if (!e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 2) {
 
         allHands[handFocusIndex].cards.push(newDeck.copyCard(e.target.value));
-        usedCards.push(parseInt(e.target.value)); 
+        usedCards.push(parseInt(e.target.value));
         e.target.classList += " used inFocusedHand";
         allHands[handFocusIndex].print(displayFocus);
 
-    }  else if (allHands[handFocusIndex].cards.some( obj => obj.identifier == parseInt(e.target.value) )) {
+    } else if (!e.target.classList.contains("used") && allHands[handFocusIndex].cards.length < 5 && displayFocus.value == 6) {
+
+        allHands[handFocusIndex].cards.push(newDeck.copyCard(e.target.value));
+        usedCards.push(parseInt(e.target.value));
+        e.target.classList += " used inFocusedHand";
+        allHands[handFocusIndex].print(displayFocus);
+
+    } else if (allHands[handFocusIndex].cards.some(obj => obj.identifier == parseInt(e.target.value))) {
 
         e.target.classList.remove("used");
         e.target.classList.remove("inFocusedHand");
-        allHands[handFocusIndex].cards = allHands[handFocusIndex].cards.filter( obj => obj.identifier != e.target.value);
+        allHands[handFocusIndex].cards = allHands[handFocusIndex].cards.filter(obj => obj.identifier != e.target.value);
         allHands[handFocusIndex].print(displayFocus);
-        usedCards = usedCards.filter( obj => obj != e.target.value);
+        usedCards = usedCards.filter(obj => obj != e.target.value);
     }
 });
 
